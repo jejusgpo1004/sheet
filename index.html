@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>자동 카테고리 전환 사이트</title>
+  <title> 서청문 예약현황 사이트</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
 
@@ -28,27 +28,32 @@
     h2 {
       color: #2a7;
       margin-top: 0;
-      font-size: 2em;
+      font-size: 2.2em;
       border-bottom: 3px solid #2a7;
       padding-bottom: 10px;
       text-align: center;
+      font-weight: bold;
     }
     table {
       border-collapse: collapse;
       margin-top: 20px;
       width: 100%;
-      font-size: 1em;
+      font-size: 1.2em; /* 전체 글자 크기 조정 */
       background: white;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     th {
       background-color: #2a7;
       color: white;
-      padding: 12px;
+      padding: 14px;
+      text-align: center;      /* 가운데 정렬 */
+      font-weight: bold;       /* 굵게 */
     }
     td {
-      padding: 10px;
+      padding: 12px;
       border-bottom: 1px solid #ddd;
+      text-align: center;      /* 가운데 정렬 */
+      font-weight: bold;       /* 굵게 */
     }
     tr:nth-child(even) td { background-color: #f8f9fa; }
     img.yeyag-image { 
@@ -65,47 +70,37 @@
   <div id="categoryDisplay">로딩 중...</div>
   <script>
     const sources = [
-      { name: "칭찬함", url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQvd2Sefa0BZEUWNT1V4mnRxbyXyDiRNEepnujdArN5VXZwmoTlYCdsrmC6D8qg_B9YaooV5MLeDvZi/pub?gid=827482491&single=true&output=csv" },
-
       { name: "컴퓨터", url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQvd2Sefa0BZEUWNT1V4mnRxbyXyDiRNEepnujdArN5VXZwmoTlYCdsrmC6D8qg_B9YaooV5MLeDvZi/pub?gid=389966305&single=true&output=csv",
         wantedCols: ["이름", "컴퓨터번호", "시작시간", "현황"],
         filter: (row,i) => { if (i===0) return true; if(!row[0].trim()) return false; const 제외=["학교","연락처","타임스탬프"]; return !제외.includes(row[0].trim()); }
       },
-
       { name: "노래연습실", url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQvd2Sefa0BZEUWNT1V4mnRxbyXyDiRNEepnujdArN5VXZwmoTlYCdsrmC6D8qg_B9YaooV5MLeDvZi/pub?gid=459320473&single=true&output=csv",
         wantedCols: ["이름", "노래방", "시작시간", "현황", "참고"],
         filter: (row,i) => { if (i===0) return true; if(!row[0].trim()) return false; return true; }
       },
-
       { name: "미디어실", url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQvd2Sefa0BZEUWNT1V4mnRxbyXyDiRNEepnujdArN5VXZwmoTlYCdsrmC6D8qg_B9YaooV5MLeDvZi/pub?gid=1373134857&single=true&output=csv",
         wantedCols: ["이름", "시작시간", "현황", "참고"],
         filter: (row,i) => { if (i===0) return true; if(!row[0].trim()) return false; return true; }
       },
-
       { name: "체육활동실", url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQvd2Sefa0BZEUWNT1V4mnRxbyXyDiRNEepnujdArN5VXZwmoTlYCdsrmC6D8qg_B9YaooV5MLeDvZi/pub?gid=93372477&single=true&output=csv",
         wantedCols: ["이름", "이용시설", "시작시간", "현황", "참고"],
         filter: (row,i) => { if (i===0) return true; if(!row[0].trim()) return false; return true; }
       },
-
       { name: "북카페", url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQvd2Sefa0BZEUWNT1V4mnRxbyXyDiRNEepnujdArN5VXZwmoTlYCdsrmC6D8qg_B9YaooV5MLeDvZi/pub?gid=660141070&single=true&output=csv",
         wantedCols: ["이름", "시작시간", "현황", "참고"],
         filter: (row,i) => { if (i===0) return true; if(!row[0].trim()) return false; return true; }
       },
-
       { name: "청운위실", url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQvd2Sefa0BZEUWNT1V4mnRxbyXyDiRNEepnujdArN5VXZwmoTlYCdsrmC6D8qg_B9YaooV5MLeDvZi/pub?gid=1485760318&single=true&output=csv",
         wantedCols: ["이름", "이용시작시간", "현황", "참고"],
         filter: (row,i) => { if (i===0) return true; if(!row[0].trim()) return false; return true; }
       },
-
       { name: "개인연습실", url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQvd2Sefa0BZEUWNT1V4mnRxbyXyDiRNEepnujdArN5VXZwmoTlYCdsrmC6D8qg_B9YaooV5MLeDvZi/pub?gid=956982417&single=true&output=csv",
         wantedCols: ["이름", "이용시작시간", "현황", "참고"],
         filter: (row,i) => { if (i===0) return true; if(!row[0].trim()) return false; return true; }
       }
     ];
-
     let currentIndex = 0;
     const interval = 5000;
-
     async function fetchCSV(url) {
       try {
         const res = await fetch(url);
@@ -117,19 +112,16 @@
         return [];
       }
     }
-
     async function showCategory(index) {
       const category = sources[index];
       const container = document.getElementById("categoryDisplay");
       container.classList.remove("show");
-
       const rows = await fetchCSV(category.url);
       if (!rows.length) {
         container.innerHTML = `<h2>${category.name}</h2><p>데이터 없음</p>`;
         container.classList.add("show");
         return;
       }
-
       let html = `<h2>${category.name}</h2>`;
       if (category.wantedCols) {
         const header = rows[0];
@@ -155,11 +147,9 @@
         });
         html += "</table>";
       }
-
       container.innerHTML = html;
       requestAnimationFrame(() => container.classList.add("show"));
     }
-
     showCategory(currentIndex);
     setInterval(() => {
       currentIndex = (currentIndex + 1) % sources.length;
